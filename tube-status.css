@@ -14,15 +14,15 @@
 }
 
 .goodStatus {
-    color: #007D32;
+    color: #384538;
 }
 
 .poorStatus {
-    color: #FFD329;
+    color: #ffe680;
 }
 
 .badStatus {
-    color: #DC241F;
+    color: hsl(2, 100%, 66%);
 }
 
 .allLines {
@@ -57,7 +57,7 @@
 }
 
 .jubilee {
-    background-color: #A0A5A9;
+    background-color: #84888b;
 }
 
 .metropolitan {

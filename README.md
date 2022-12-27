@@ -1,11 +1,11 @@
-# MMM-TLF-Status 
+# MMM-TFL-Status 
 ## Magic Mirror Module for Trasport For London Status
 
 ![TFL status](tube.png "TFL status.")
 
 This a module for the [MagicMirror](https://github.com/MichMich/MagicMirror).  
 
-This module shows the status of the Transport for London (TLF) lines including:
+This module shows the status of the Transport for London (TFL) lines including:
 - Tube
 - Elizabeth Line
 - DLR
@@ -15,8 +15,8 @@ This module shows the status of the Transport for London (TLF) lines including:
 
 
 ## Installation
-Navigate into your MagicMirror's `modules` folder and execute `git clone https://github.com/emanuele-albini/MMM-TLF-Status`. 
-A new folder `MMM-TLF-Status` will appear, navigate into it.
+Navigate into your MagicMirror's `modules` folder and execute `git clone https://github.com/emanuele-albini/MMM-TFL-Status`. 
+A new folder `MMM-TFL-Status` will appear, navigate into it.
 
 The package does not require any additional dependency.
 
@@ -37,7 +37,7 @@ The entry in `config.js` can include the following options:
 Here is an example of an entry in `config.js`
 ```
 {
-    module:		'MMM-TLF-Status',
+    module:		'MMM-TFL-Status',
     position:	'top_left',
     header:		'TFL Status',
     config:		{

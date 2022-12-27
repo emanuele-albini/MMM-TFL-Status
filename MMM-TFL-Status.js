@@ -1,4 +1,4 @@
-/* Magic Mirror Module: MMM-TLF-Status
+/* Magic Mirror Module: MMM-TFL-Status
  * Version: 1.0.0
  *
  * By Nigel Daniels https://github.com/nigel-daniels/
@@ -6,15 +6,16 @@
  * MIT Licensed.
  */
 
-Module.register('MMM-TLF-Status', {
+Module.register('MMM-TFL-Status', {
 
     defaults: {
-        modes: ['tube', 'elizabeth_line', 'dlr', 'overground'],
+        modes: ['tube', 'elizabeth-line', 'dlr', 'overground'],
         lines: null,
         blacklistLines: false,
         lines_sorting: null,
-        hide_good: false,
-        interval: 15 * 60 * 1000 // Every 15 minutes
+        lines_always_show: null,
+        ignore_good: false,
+        interval: 15 * 60 * 1000, // Every 15 minutes
     },
 
 
@@ -22,10 +23,10 @@ Module.register('MMM-TLF-Status', {
         Log.log('Starting module: ' + this.name);
 
         // Set up the local values, here we construct the request url to use
-        this.result = {};
+        this.responses = {};
 
         // Trigger the first request
-        this.getTFLStatusData(this);
+        this.getTFLStatusData();
     },
 
 
@@ -34,30 +35,41 @@ Module.register('MMM-TLF-Status', {
     },
 
 
-    getTFLStatusData: function (that) {
-        console.log('Getting Tube data...')
+    getTFLStatusData: function () {
+
+        var that = this;
 
         // Request he helper to get the status for each mode
-        for (var mode in this.config.modes) {
+        this.config.modes.forEach(function (mode) {
+            console.log('Getting TFL status for ' + mode + '...');
             that.sendSocketNotification('GET-TFL-STATUS', mode);
-        }
+        });
 
         // Set up the timer to perform the updates
-        setTimeout(that.getTFLStatusData, that.config.interval, that);
+        setTimeout(that.getTFLStatusData, that.config.interval);
     },
 
 
     getDom: function () {
-        var startedLoading = (Object.keys(this.result).length > 0);
-        var finishedLoading = (Object.keys(this.result).length == this.config.modes.length);
-        var errors = {};
+
+        var that = this;
+
+        // Set up the wrapper
+        var wrapper = document.createElement('div');
+        wrapper.className = 'bright medium';
+
+
+        var startedLoading = (Object.keys(this.responses).length > 0);
+        var finishedLoading = (Object.keys(this.responses).length == this.config.modes.length);
+        var errors = [];
 
         // If we have some data to display then build the results table
         if (startedLoading) {
             // Get status of all the lines
             var lines = []
-            for (var mode in this.result) {
-                result = this.result[mode];
+            for (var mode in that.responses) {
+                response = that.responses[mode];
+                const { result } = response;
                 if (result !== null) {
                     for (var i = 0; i < result.length; i++) {
                         r = result[i]
@@ -71,44 +83,44 @@ Module.register('MMM-TLF-Status', {
                                     }
                                 }
                             }
+                        }
 
-                            var line = {
-                                'id': r.id,
-                                'name': r.name,
-                                'status': statusDesc,
-                                'mode': mode,
-                            };
+                        var line = {
+                            'id': r.id,
+                            'name': r.name,
+                            'status': statusDesc,
+                            'mode': mode,
+                        };
 
-                            console.log('MMM-TFL-Status: ' + r.id + ' (' + r.name + ') reports ' + statusDesc)
+                        console.log('MMM-TFL-Status: ' + r.id + ' (' + r.name + ') reports ' + statusDesc);
 
-                            if (this.config.lines === null) {
-                                lines.push(line);
+                        if (that.config.lines === null) {
+                            lines.push(line);
+                        } else {
+
+                            // We exclude the blacklisted lines if `blacklistLines` is set
+                            // Otherwise we keep only those specified (or all if config.lines is null)
+                            if (that.config.blacklistLines) {
+                                if (!that.config.lines.includes(line.id)) {
+                                    lines.push(line);
+                                }
                             } else {
-
-                                // We exclude the blacklisted lines if `blacklistLines` is set
-                                // Otherwise we keep only those specified (or all if config.lines is null)
-                                if (this.config.blacklistLines) {
-                                    if (!this.config.lines.includes(line.id) && !this.config.lines.includes(line.name.toLowerCase())) {
-                                        lines.push(line);
-                                    }
-                                } else {
-                                    if (this.config.lines.includes(line.id) || this.config.lines.includes(line.name.toLowerCase())) {
-                                        lines.push(line);
-                                    }
+                                if (that.config.lines.includes(line.id)) {
+                                    lines.push(line);
                                 }
                             }
                         }
                     }
                 } else {
-                    errors.push({ 'mode': mode, 'message': result.error })
+                    errors.push({ 'mode': mode, 'message': response.error })
                 }
             }
 
             //Sort
-            if (this.config.lines_sorting !== null) {
+            if (that.config.lines_sorting !== null) {
                 const compareLines = (linea, lineb) => {
-                    var indexa = this.config.lines_sorting.indexOf(linea.id)
-                    var indexb = this.config.lines_sorting.indexOf(lineb.id)
+                    var indexa = that.config.lines_sorting.indexOf(linea.id)
+                    var indexb = that.config.lines_sorting.indexOf(lineb.id)
 
                     if (indexa == -1) {
                         indexa = 10000
@@ -117,14 +129,10 @@ Module.register('MMM-TLF-Status', {
                         indexb = 10000
                     }
 
-                    return indexb - indexa;
+                    return indexa - indexb;
                 }
                 lines = lines.sort(compareLines)
             }
-
-            // Set up the local wrapper
-            var wrapper = document.createElement('div');
-            wrapper.className = 'bright medium';
 
             // Show loading banner if all modes did not load yet
             if (!finishedLoading) {
@@ -134,9 +142,9 @@ Module.register('MMM-TLF-Status', {
             // Show error banner if some of the modes status did not load correctly
             if (errors.length > 0) {
                 wrapper.innerHTML = ''
-                for (var err in errors) {
+                errors.forEach(function (err) {
                     wrapper.innerHTML += 'Error ' + err.message + ' loading TfL status for ' + err.mode + '<br>';
-                }
+                });
             }
 
             // Create a table
@@ -146,7 +154,7 @@ Module.register('MMM-TLF-Status', {
             // Lines with good service counter
             var goodService = 0;
 
-            for (var line in lines) {
+            lines.forEach(function (line) {
                 // Create a line for each line
                 lineRow = document.createElement('tr');
 
@@ -160,7 +168,7 @@ Module.register('MMM-TLF-Status', {
                 lineStatus.innerHTML = line.status;
 
                 // Assign class depending on the status
-                switch (severity) {
+                switch (line.status) {
                     case 'Good Service':
                     case 'No Issues':
                         lineStatus.className = 'lineStatus goodStatus';
@@ -198,16 +206,17 @@ Module.register('MMM-TLF-Status', {
                     goodService++;
                 }
 
-                // We do not show those with good service if `hide_good` is set
-                if (!this.config.hide_good || line.status != 'Good Service') {
+                // We do not show those with good service if `ignore_good` is set
+                console.log(that.config.ignore_good.toString());
+                if (!that.config.ignore_good || line.status != 'Good Service' || (that.config.lines_always_show !== null && that.config.lines_always_show.includes(line.id))) {
                     linesTable.appendChild(lineRow);
                 }
-            }
+            });
 
 
             // Let's add a "Good Service" banner on "All Lines" if all are running fine
-            // (and `hide_good` is set)
-            if (finishedLoading && this.config.hide_good && goodService === lines.length && errors.length == 0) {
+            // (and `ignore_good` is set)
+            if (finishedLoading && that.config.ignore_good && goodService === lines.length && errors.length == 0) {
                 allRow = document.createElement('tr');
 
                 allLines = document.createElement('td');
@@ -226,6 +235,8 @@ Module.register('MMM-TLF-Status', {
 
             wrapper.appendChild(linesTable);
 
+        } else {
+            wrapper.innerHTML = 'Loading TfL lines...';
         }
 
         return wrapper;
@@ -236,8 +247,10 @@ Module.register('MMM-TLF-Status', {
     socketNotificationReceived: function (notification, payload) {
         // check to see if the response was for us and used the same url
         if (notification === 'GOT-TFL-STATUS') {
+            console.log('Got TFL status for ', payload.mode);
+
             // we got some data so set the flag, stash the data to display then request the dom update
-            this.result[payload.mode] = payload.result;
+            this.responses[payload.mode] = payload;
             this.updateDom(1000);
         }
     }
