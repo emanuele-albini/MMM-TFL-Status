@@ -11,7 +11,8 @@ Module.register('MMM-TLF-Status', {
     defaults: {
         modes: ['tube', 'elizabeth_line', 'dlr', 'overground'],
         lines: null,
-        sorting: ['elizabeth', 'jubilee', 'piccadilly', 'bakerloo', 'northern', 'dlr', 'victoria', 'district', 'circle', 'london-overground',],
+        blacklistLines: false,
+        lines_sorting: null,
         hide_good: false,
         interval: 15 * 60 * 1000 // Every 15 minutes
     },
@@ -62,25 +63,63 @@ Module.register('MMM-TLF-Status', {
                         r = result[i]
                         for (var j = 0; j < r.lineStatuses.length; j++) {
                             if (r.lineStatuses[j].validityPeriods.length < 2) {
-                                severity = r.lineStatuses[j].statusSeverityDescription;
+                                statusDesc = r.lineStatuses[j].statusSeverityDescription;
                             } else {
                                 for (var k = 0; k < r.lineStatuses[j].validityPeriods.length; k++) {
                                     if (r.lineStatuses[j].validityPeriods[k].isNow) {
-                                        severity = r.lineStatuses[j].statusSeverityDescription;
+                                        statusDesc = r.lineStatuses[j].statusSeverityDescription;
                                     }
                                 }
                             }
-                            lines.push({
+
+                            var line = {
                                 'id': r.id,
                                 'name': r.name,
-                                'status': severity,
+                                'status': statusDesc,
                                 'mode': mode,
-                            });
+                            };
+
+                            console.log('MMM-TFL-Status: ' + r.id + ' (' + r.name + ') reports ' + statusDesc)
+
+                            if (this.config.lines === null) {
+                                lines.push(line);
+                            } else {
+
+                                // We exclude the blacklisted lines if `blacklistLines` is set
+                                // Otherwise we keep only those specified (or all if config.lines is null)
+                                if (this.config.blacklistLines) {
+                                    if (!this.config.lines.includes(line.id) && !this.config.lines.includes(line.name.toLowerCase())) {
+                                        lines.push(line);
+                                    }
+                                } else {
+                                    if (this.config.lines.includes(line.id) || this.config.lines.includes(line.name.toLowerCase())) {
+                                        lines.push(line);
+                                    }
+                                }
+                            }
                         }
                     }
                 } else {
                     errors.push({ 'mode': mode, 'message': result.error })
                 }
+            }
+
+            //Sort
+            if (this.config.lines_sorting !== null) {
+                const compareLines = (linea, lineb) => {
+                    var indexa = this.config.lines_sorting.indexOf(linea.id)
+                    var indexb = this.config.lines_sorting.indexOf(lineb.id)
+
+                    if (indexa == -1) {
+                        indexa = 10000
+                    }
+                    if (indexb == -1) {
+                        indexb = 10000
+                    }
+
+                    return indexb - indexa;
+                }
+                lines = lines.sort(compareLines)
             }
 
             // Set up the local wrapper
