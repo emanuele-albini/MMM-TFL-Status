@@ -6,6 +6,8 @@
  * MIT Licensed.
  */
 
+const ALIAS = { 'London Overground': 'Overground' };
+
 Module.register('MMM-TFL-Status', {
 
     defaults: {
@@ -16,6 +18,7 @@ Module.register('MMM-TFL-Status', {
         lines_always_show: null,
         ignore_good: false,
         interval: 15 * 60 * 1000, // Every 15 minutes
+        names: { 'london-overground': 'Overground', 'elizabeth': 'Elizabeth' },
     },
 
 
@@ -85,9 +88,14 @@ Module.register('MMM-TFL-Status', {
                             }
                         }
 
+                        lineName = r.name;
+                        if (that.config.names[r.id] !== undefined) {
+                            lineName = that.config.names[r.id];
+                        }
+
                         var line = {
                             'id': r.id,
-                            'name': r.name,
+                            'name': lineName,
                             'status': statusDesc,
                             'mode': mode,
                         };
