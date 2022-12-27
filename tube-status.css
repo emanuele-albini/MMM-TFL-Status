@@ -1,0 +1,94 @@
+.tflStatus {
+    font-size: 20px;
+    text-align: center;
+}
+
+.lineName {
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.lineStatus {
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.goodStatus {
+    color: #007D32;
+}
+
+.poorStatus {
+    color: #FFD329;
+}
+
+.badStatus {
+    color: #DC241F;
+}
+
+.allLines {
+    color: #000000;
+    background-color: #FFFFFF;
+}
+
+.bakerloo {
+    background-color: #B36305;
+}
+
+.elizabeth {
+    background-color: #6950A1;
+}
+
+.central {
+    background-color: #E32017;
+}
+
+.circle {
+    background-color: #FFD300;
+    color: #000000;
+}
+
+.district {
+    background-color: #00782A;
+}
+
+.hammersmith-city {
+    background-color: #F3A9BB;
+    color: #000000;
+}
+
+.jubilee {
+    background-color: #A0A5A9;
+}
+
+.metropolitan {
+    background-color: #9B0056;
+}
+
+.northern {
+    background-color: #000000;
+}
+
+.piccadilly {
+    background-color: #003688;
+}
+
+.victoria {
+    background-color: #0098D4;
+}
+
+.waterloo-city {
+    background-color: #95CDBA;
+    color: #000000;
+}
+
+.dlr {
+    background-color: #00A4A7;
+}
+
+.london-overground {
+    background-color: #EE7C0E;
+}
+
+.tram {
+    background-color: #84B817;
+}
