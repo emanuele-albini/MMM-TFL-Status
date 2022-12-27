@@ -15,8 +15,10 @@ This module shows the status of the Transport for London (TLF) lines including:
 
 
 ## Installation
-1. Navigate into your MagicMirror's `modules` folder and execute `git clone https://github.com/nigel-daniels/MMM-TLF-Status`.  A new folder `MMM-TLF-Status` will appear, navigate into it.
-2. Execute `npm install` to install the node dependencies.
+Navigate into your MagicMirror's `modules` folder and execute `git clone https://github.com/emanuele-albini/MMM-TLF-Status`. 
+A new folder `MMM-TLF-Status` will appear, navigate into it.
+
+The package does not require any additional dependency.
 
 ## Configuration
 The entry in `config.js` can include the following options:
@@ -40,10 +42,6 @@ Here is an example of an entry in `config.js`
     }
 },
 ```
-
-## Dependencies
-This package does not depend on any other package.
-
 
 ## Credits
 This module is based and considerably extends [Nigel Daniels](https://github.com/nigel-daniels/)'s module [MMM-Tube-Status](https://github.com/nigel-daniels/MMM-Tube-Status).
