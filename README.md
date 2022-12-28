@@ -22,25 +22,27 @@ The package does not require any additional dependency and thus does not contain
 *If you encounter any issuses with the package, please submit an issue here on GitHub.*
 
 ## Configuration
-The entry in `config.js` can include the following options:
+The entry in `config.js` can include the following options. *All arguments are optional*.
 
 |Option|Description|
 |---|---|
-|`modes`| Modes for which to gather the status from TFL API.<br><br>**Type:** `array` of `string` <br>**Default value:** `['tube', 'elizabeth_line', 'dlr', 'overground']`|
-|`lines`| Array of lines to visualise.<br><br>**Type:** `array` of `string` (lines id, or name, in lower-case) <br>**Default value:** `null // all`|
-|`lines_order`| Order in which to visualise the lines. The lines listed here will be visualised first (in the order specified). <br><br>**Type:** `array` of `string`  <br>**Default value:** `['elizabeth', 'jubilee', 'piccadilly', 'bakerloo', 'northern', 'dlr', 'victoria', 'district', 'circle', 'london-overground']`|
-|`blacklistLines`| If `true`, `lines` will act as a balcklist (all the lines but those specified will be visualised). <br><br>**Type:** `boolean` <br>**Default value:** `false`|
-|`hide_good`| This determines if the module displays hides lines that have good service (`true`) or shows all of the lines (`true`). If this is used and all lines have good service then only a single line indicates this. <br><br>**Type:** `boolean`<br>**Default value:** `false`|
 |`interval`| How often the TFL status is updated.<br><br>**Type:** `integer`<br>**Default value:** `600000 // 10 minutes`|
+|`modes`| Modes for which to gather the status from TFL API.<br>Check [https://api.tfl.gov.uk/line/meta/modes](https://api.tfl.gov.uk/line/meta/modes) for a list of valid modes. <br><br>**Type:** `array` of `string` <br>**Default value:** `['tube', 'elizabeth_line', 'dlr', 'overground']`|
+|`hide_good`| This determines if the module displays hides lines that have good service (`true`) or shows all of the lines (`true`). If this is used and all lines have good service then only a single line indicates this. <br><br>**Type:** `boolean`<br>**Default value:** `false`|
+|`lines`| Array of lines to visualise (among those in the selected modes).<br>Check [https://api.tfl.gov.uk/line/mode/<mode>](https://api.tfl.gov.uk/line/mode/tube) for a list of all the lines in a certain mode.<br><br>**Type:** `array` of `string` (lines id, or name, in lower-case) <br>**Default value:** `null` (all)|
+|`lines_always_show`| Array of lines to always show (even if `hide_good = true`).<br><br>**Type:** `array` of `string` (lines id, or name, in lower-case) <br>**Default value:** `null` (none)|
+|`lines_order`| Order in which to visualise the lines. The lines listed here will be visualised first (in the order specified). <br><br>**Type:** `array` of `string`  <br>**Default value:** `null` (random order)|
+|`blacklistLines`| If `true`, `lines` will act as a balcklist (all the lines but those specified will be visualised). <br><br>**Type:** `boolean` <br>**Default value:** `false`|
+|`names`| A line ID-name mapping to override the default names that TFL gives to lines. This is useful for lines that have inexplicably long names in TFL API (e.g., `London Overground` or `Elizabeth line`) <br><br>**Type:** `object/dictionary` line ids as keys and line names as values <br>**Default value:** `{ 'london-overground': 'Overground', 'elizabeth': 'Elizabeth' }`|
 
 Here is an example of an entry in `config.js`
 ```
 {
-    module:		'MMM-TFL-Status',
-    position:	'top_left',
-    header:		'TFL Status',
+    module:     'MMM-TFL-Status',
+    position:   'top_left',
     config:		{
-        hide_good: false,
+        hide_good: true,
+        lines_always_show: ['elizabeth'],
         interval: 15 * 60 * 1000, // 15 minutes
     }
 },
@@ -59,5 +61,5 @@ This module extends it by allowing the user to:
 - show also additional TFL lines (and not only Tube lines);
 - use a blacklist of lines instead of a whitelist.
 - sort the lines in a custom order;
-- 
+- select some lines to always show even if the `hide_good` option is set.
 - Removing the dependency from the `request` package.
