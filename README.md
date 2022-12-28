@@ -11,7 +11,7 @@ This module shows the status of the Transport for London (TFL) lines including:
 - Tram
 - Bus
 
-![TFL status](tube.png "TFL status.")
+![TFL status](tube.png "TFL status." | width=200)
 
 ## Installation
 Navigate into your MagicMirror's `modules` folder and execute `git clone https://github.com/emanuele-albini/MMM-TFL-Status`. 
