@@ -1,9 +1,7 @@
 # MMM-TFL-Status 
 ## Magic Mirror Module for Trasport For London Status
 
-![TFL status](tube.png "TFL status.")
-
-This a module for the [MagicMirror](https://github.com/MichMich/MagicMirror).  
+This is a module for the [MagicMirror](https://github.com/MichMich/MagicMirror).  
 
 This module shows the status of the Transport for London (TFL) lines including:
 - Tube
@@ -13,20 +11,21 @@ This module shows the status of the Transport for London (TFL) lines including:
 - Tram
 - Bus
 
+![TFL status](tube.png "TFL status.")
 
 ## Installation
 Navigate into your MagicMirror's `modules` folder and execute `git clone https://github.com/emanuele-albini/MMM-TFL-Status`. 
 A new folder `MMM-TFL-Status` will appear, navigate into it.
 
-The package does not require any additional dependency.
+The package does not require any additional dependency and thus does not contains any `package.json`.
+
+*If you encounter any issuses with the package, please submit an issue here on GitHub.*
 
 ## Configuration
 The entry in `config.js` can include the following options:
 
 |Option|Description|
 |---|---|
-<!-- |`app_id`|**Required (SEE NOTES)** This is the App ID assigned to you on the TfL Open Data Portal.  Details on how to request an App ID can be found [here](https://api-portal.tfl.gov.uk/docs)<br><br>**Type:** `string`<br>|
-|`api_key`|**Required (SEE NOTES)** This is the API key assigned to you on the TfL Open Data Portal.  Details on how to request an API key can be found [here](https://api-portal.tfl.gov.uk/docs)<br><br>**Type:** `string`<br>| -->
 |`modes`| Modes for which to gather the status from TFL API.<br><br>**Type:** `array` of `string` <br>**Default value:** `['tube', 'elizabeth_line', 'dlr', 'overground']`|
 |`lines`| Array of lines to visualise.<br><br>**Type:** `array` of `string` (lines id, or name, in lower-case) <br>**Default value:** `null // all`|
 |`lines_order`| Order in which to visualise the lines. The lines listed here will be visualised first (in the order specified). <br><br>**Type:** `array` of `string`  <br>**Default value:** `['elizabeth', 'jubilee', 'piccadilly', 'bakerloo', 'northern', 'dlr', 'victoria', 'district', 'circle', 'london-overground']`|
@@ -47,10 +46,18 @@ Here is an example of an entry in `config.js`
 },
 ```
 
+### TFL API
+
+For more informations on the TFL API check out their [website](https://api.tfl.gov.uk/).
+
+Note that this plugin does not require any API key because TFL grants 50 requests/minute under anonymous access at the time of writing.
+
 ## Credits
 This module is based and considerably extends [Nigel Daniels](https://github.com/nigel-daniels/)'s module [MMM-Tube-Status](https://github.com/nigel-daniels/MMM-Tube-Status).
 
-This module extends it by:
-- Allow to show also additional TFL lines (and not only Tube lines);
-- Allow to sort the lines in a custom order;
-- Removing the dependency from `request` package.
+This module extends it by allowing the user to:
+- show also additional TFL lines (and not only Tube lines);
+- use a blacklist of lines instead of a whitelist.
+- sort the lines in a custom order;
+- 
+- Removing the dependency from the `request` package.
