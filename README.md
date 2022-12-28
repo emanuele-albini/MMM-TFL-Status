@@ -1,6 +1,14 @@
 # MMM-TFL-Status 
 ## Magic Mirror Module for Trasport For London Status
 
+![](https://img.shields.io/badge/status-active-brightgreen)
+![Issues](
+https://img.shields.io/github/issues/emanuele-albini/MMM-TFL-Status)
+![Pull](
+https://img.shields.io/github/issues-pr/emanuele-albini/MMM-TFL-Status)
+[![Maintaner](https://img.shields.io/badge/maintainer-Emanuele-blue)](https://www.emanuelealbini.com)
+[![GitHub license](https://img.shields.io/github/license/Naereen/StrapDown.js.svg)](https://github.com/emanuele-albini/qualtrutils/blob/master/LICENSE)
+
 This is a module for the [MagicMirror](https://github.com/MichMich/MagicMirror).  
 
 This module shows the status of the Transport for London (TFL) lines including:
