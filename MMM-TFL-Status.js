@@ -49,7 +49,7 @@ Module.register('MMM-TFL-Status', {
         });
 
         // Set up the timer to perform the updates
-        setTimeout(that.getTFLStatusData, that.config.interval);
+        setTimeout(function () { that.getTFLStatusData() }, this.config.interval);
     },
 
 
