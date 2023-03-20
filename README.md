@@ -37,7 +37,7 @@ The entry in `config.js` can include the following options. *All arguments are o
 |---|---|
 |`interval`| How often the TFL status is updated.<br><br>**Type:** `integer`<br>**Default value:** `600000 // 10 minutes`|
 |`modes`| Modes for which to gather the status from TFL API.<br>Check [https://api.tfl.gov.uk/line/meta/modes](https://api.tfl.gov.uk/line/meta/modes) for a list of valid modes. <br><br>**Type:** `array` of `string` <br>**Default value:** `['tube', 'elizabeth_line', 'dlr', 'overground']`|
-|`hide_good`| This determines if the module displays hides lines that have good service (`true`) or shows all of the lines (`true`). If this is used and all lines have good service then only a single line indicates this. <br><br>**Type:** `boolean`<br>**Default value:** `false`|
+|`ignore_good`| This determines if the module display hides lines that have good service (`true`) or shows all of the lines (`false`). If this is used and all lines have good service then only a single line indicates this. <br><br>**Type:** `boolean`<br>**Default value:** `false`|
 |`lines`| Array of lines to visualise (among those in the selected modes).<br>Check [https://api.tfl.gov.uk/line/mode/<mode>](https://api.tfl.gov.uk/line/mode/tube) for a list of all the lines in a certain mode.<br><br>**Type:** `array` of `string` (lines id, or name, in lower-case) <br>**Default value:** `null` (all)|
 |`lines_always_show`| Array of lines to always show (even if `hide_good = true`).<br><br>**Type:** `array` of `string` (lines id, or name, in lower-case) <br>**Default value:** `null` (none)|
 |`lines_order`| Order in which to visualise the lines. The lines listed here will be visualised first (in the order specified). <br><br>**Type:** `array` of `string`  <br>**Default value:** `null` (random order)|
@@ -50,7 +50,7 @@ Here is an example of an entry in `config.js`
     module:     'MMM-TFL-Status',
     position:   'top_left',
     config:		{
-        hide_good: true,
+        ignore_good: true,
         lines_always_show: ['elizabeth'],
         interval: 15 * 60 * 1000, // 15 minutes
     }
